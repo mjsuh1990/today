@@ -1752,10 +1752,9 @@ h1::before {
 const STORAGE_KEY = 'today_routine_data_v1';
 
 // 한국시간(KST, UTC+9) 기준 날짜 헬퍼
+// 반환된 Date의 UTC 메서드(getUTCFullYear/Month/Date/Day/Hours)가 KST 값을 반환하도록 +9h 오프셋만 적용
 function getKSTDate(date = new Date()) {
-  // 현재 시각을 KST로 환산한 Date 객체 (Y/M/D만 정확히 KST 기준)
-  const utcMs = date.getTime() + (date.getTimezoneOffset() * 60000);
-  return new Date(utcMs + 9 * 3600000);
+  return new Date(date.getTime() + 9 * 3600000);
 }
 function formatDateKST(date = new Date()) {
   const d = getKSTDate(date);
