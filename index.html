@@ -1772,6 +1772,8 @@ function getKSTHour(date = new Date()) {
 const realToday = formatDateKST();
 let today = realToday;
 
+const ANCIENT_DATE = '2000-01-01'; // 기존 루틴의 createdAt 기본값 (모든 과거 날짜에 적용되도록)
+
 function shiftDateString(dateStr, delta) {
   const [y, m, d] = dateStr.split('-').map(Number);
   const date = new Date(Date.UTC(y, m - 1, d));
@@ -1848,8 +1850,6 @@ function getModeForDate(dateStr) {
   const date = new Date(dateStr + 'T00:00:00+09:00');
   return isWeekend(date) ? 'weekend' : 'weekday';
 }
-
-const ANCIENT_DATE = '2000-01-01'; // 마이그레이션 시 기존 루틴의 createdAt 기본값
 
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
