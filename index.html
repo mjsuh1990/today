@@ -64,6 +64,7 @@ body {
   -webkit-font-smoothing: antialiased;
   position: relative;
   overflow-x: hidden;
+  background: #ffffff;
 }
 
 /* === 배경: 수채화 일러스트 패턴 + 메쉬 그라데이션 === */
@@ -83,18 +84,16 @@ body::before {
     linear-gradient(180deg, #ffffff 0%, #f8fbfc 8%, #f0f7f9 25%, #f4f9fa 60%, #fcfeff 100%);
 }
 
-/* 떠다니는 광원 + 햇빛 반짝임 */
+/* 떠다니는 광원 (흰색 톤만 유지) */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -1;
-  background-image: 
-    radial-gradient(circle at 12% 20%, rgba(255, 255, 255, 0.85) 0%, transparent 6%),
-    radial-gradient(circle at 78% 35%, rgba(255, 255, 255, 0.6) 0%, transparent 8%),
-    radial-gradient(circle at 45% 55%, rgba(127, 233, 240, 0.4) 0%, transparent 12%),
-    radial-gradient(circle at 88% 70%, rgba(255, 255, 255, 0.5) 0%, transparent 7%),
-    radial-gradient(circle at 25% 80%, rgba(0, 212, 230, 0.25) 0%, transparent 10%);
+  background-image:
+    radial-gradient(circle at 12% 30%, rgba(255, 255, 255, 0.7) 0%, transparent 7%),
+    radial-gradient(circle at 78% 45%, rgba(255, 255, 255, 0.55) 0%, transparent 8%),
+    radial-gradient(circle at 88% 75%, rgba(255, 255, 255, 0.5) 0%, transparent 7%);
   filter: blur(35px);
   animation: drift 20s ease-in-out infinite;
 }
