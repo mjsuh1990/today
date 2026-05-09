@@ -3053,12 +3053,8 @@ document.getElementById('resetBtn').addEventListener('click', resetAll);
 // URL에 데이터가 있으면 처리
 loadFromUrlIfPresent();
 
-// 오늘의 모드를 자동 기록 (캘린더 통계용)
 if (!state.dailyMode) state.dailyMode = {};
-if (!state.dailyMode[today]) {
-  state.dailyMode[today] = currentMode;
-  saveState();
-}
+// 모드는 사용자가 명시적으로 변경할 때만 저장. 기본값은 매번 요일에서 도출.
 
 render();
 

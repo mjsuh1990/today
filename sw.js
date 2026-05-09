@@ -1,5 +1,5 @@
 // 캐시 이름 — 업데이트할 때 버전 숫자 올리면 새 캐시 사용
-const CACHE_NAME = 'today-routine-v3';
+const CACHE_NAME = 'today-routine-v4';
 
 // 설치 시 캐시할 파일들 (앱 셸)
 const ASSETS = [
