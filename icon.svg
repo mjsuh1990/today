@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7fe9f0"/>
+      <stop offset="50%" stop-color="#48cae4"/>
+      <stop offset="100%" stop-color="#0077b6"/>
+    </linearGradient>
+    <linearGradient id="check" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe57a"/>
+      <stop offset="100%" stop-color="#f5b800"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="30%" cy="25%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.5)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- 배경 (둥근 사각형) -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  
+  <!-- 빛 반사 효과 -->
+  <rect width="512" height="512" rx="112" fill="url(#shine)"/>
+  
+  <!-- 노란 체크 동그라미 -->
+  <circle cx="256" cy="256" r="120" fill="url(#check)" opacity="0.95"/>
+  <circle cx="256" cy="256" r="120" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="3"/>
+  
+  <!-- 체크 마크 -->
+  <path d="M 200 256 L 240 296 L 320 216" 
+        fill="none" 
+        stroke="white" 
+        stroke-width="22" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- 작은 물방울 데코 -->
+  <circle cx="120" cy="120" r="14" fill="rgba(255,255,255,0.7)"/>
+  <circle cx="400" cy="100" r="8" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="420" cy="400" r="12" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="100" cy="420" r="10" fill="rgba(255,255,255,0.5)"/>
+</svg>
