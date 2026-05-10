@@ -1866,6 +1866,9 @@ function loadState() {
       if (!parsed.dayPlans) parsed.dayPlans = {};
       if (!parsed.dayTodos) parsed.dayTodos = {};
       if (!parsed.energy) parsed.energy = {};
+      if (Array.isArray(parsed.routines)) {
+        parsed.routines = parsed.routines.filter(r => r && typeof r === 'object' && r.id != null);
+      }
       return parsed;
     } catch(e) {}
   }
@@ -2143,10 +2146,13 @@ function setupRoutineDrag(container) {
 
             const newOrderIds = [...list.querySelectorAll('.routine-item')].map(el => +el.dataset.id);
             const inSlot = new Set(newOrderIds);
+            const idToItem = new Map();
+            state.routines.forEach(r => { if (inSlot.has(r.id)) idToItem.set(r.id, r); });
             let i = 0;
             state.routines = state.routines.map(r => {
               if (inSlot.has(r.id)) {
-                return state.routines.find(x => x.id === newOrderIds[i++]);
+                const replaced = idToItem.get(newOrderIds[i++]);
+                return replaced || r;
               }
               return r;
             });
