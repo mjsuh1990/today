@@ -563,11 +563,28 @@ h1::before {
   padding: 11px 14px;
   border-bottom: 1px solid var(--line-soft);
   cursor: pointer;
-  transition: background 0.2s;
   position: relative;
+  touch-action: none;
+  transition: transform 0.22s cubic-bezier(0.2, 0, 0, 1), background 0.2s, box-shadow 0.2s;
+  will-change: transform;
 }
 .routine-item:last-child { border-bottom: none; }
 .routine-item:hover { background: rgba(72, 202, 228, 0.08); }
+.routine-item.dragging {
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 14px 32px rgba(0, 119, 182, 0.28), 0 2px 6px rgba(0, 119, 182, 0.12);
+  border-radius: 12px;
+  cursor: grabbing;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: none;
+}
+.routine-item.dragging * {
+  cursor: grabbing !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
 
 .check-emoji {
   width: 26px; height: 26px;
@@ -2031,6 +2048,7 @@ function renderContent() {
   
   container.querySelectorAll('.routine-item').forEach(el => {
     el.addEventListener('click', e => {
+      if (el.dataset.justDragged) return;
       if (e.target.closest('.routine-actions')) return;
       toggleDone(+el.dataset.id);
     });
@@ -2050,6 +2068,96 @@ function renderContent() {
         saveState();
         render();
       }
+    });
+  });
+
+  setupRoutineDrag(container);
+}
+
+function setupRoutineDrag(container) {
+  container.querySelectorAll('.routine-list').forEach(list => {
+    list.querySelectorAll('.routine-item').forEach(item => {
+      item.addEventListener('pointerdown', e => {
+        if (e.button !== undefined && e.button !== 0) return;
+        if (e.target.closest('button, input, textarea, select')) return;
+
+        const startX = e.clientX;
+        const startY = e.clientY;
+        let cardOriginalTop = 0;
+        let dragStarted = false;
+        let lastBefore = null;
+        let didMove = false;
+        let cleaned = false;
+
+        const onMove = ev => {
+          if (!dragStarted) {
+            const dx = Math.abs(ev.clientX - startX);
+            const dy = Math.abs(ev.clientY - startY);
+            if (dx < 5 && dy < 5) return;
+            dragStarted = true;
+            cardOriginalTop = item.getBoundingClientRect().top;
+            lastBefore = item.nextElementSibling;
+            item.classList.add('dragging');
+            if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+          }
+          if (ev.cancelable) ev.preventDefault();
+
+          const others = [...list.querySelectorAll('.routine-item:not(.dragging)')];
+          let target = null;
+          for (const other of others) {
+            const rect = other.getBoundingClientRect();
+            if (ev.clientY < rect.top + rect.height / 2) {
+              target = other;
+              break;
+            }
+          }
+          if (target !== lastBefore) {
+            if (target) list.insertBefore(item, target);
+            else list.appendChild(item);
+            lastBefore = target;
+            didMove = true;
+          }
+
+          item.style.transform = '';
+          const naturalTop = item.getBoundingClientRect().top;
+          const desiredTop = cardOriginalTop + (ev.clientY - startY);
+          const tDy = desiredTop - naturalTop;
+          item.style.transform = `translateY(${tDy}px)`;
+        };
+
+        const onEnd = () => {
+          if (cleaned) return;
+          cleaned = true;
+          document.removeEventListener('pointermove', onMove);
+          document.removeEventListener('pointerup', onEnd);
+          document.removeEventListener('pointercancel', onEnd);
+
+          if (!dragStarted) return;
+
+          item.classList.remove('dragging');
+          item.style.transform = '';
+
+          if (didMove) {
+            item.dataset.justDragged = '1';
+            setTimeout(() => { delete item.dataset.justDragged; }, 100);
+
+            const newOrderIds = [...list.querySelectorAll('.routine-item')].map(el => +el.dataset.id);
+            const inSlot = new Set(newOrderIds);
+            let i = 0;
+            state.routines = state.routines.map(r => {
+              if (inSlot.has(r.id)) {
+                return state.routines.find(x => x.id === newOrderIds[i++]);
+              }
+              return r;
+            });
+            saveState();
+          }
+        };
+
+        document.addEventListener('pointermove', onMove);
+        document.addEventListener('pointerup', onEnd);
+        document.addEventListener('pointercancel', onEnd);
+      });
     });
   });
 }
